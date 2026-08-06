@@ -112,56 +112,122 @@ export const useQuantumStore = create<QuantumStore>()(
       activePanel: 'circuit',
       showAlgoModal: false,
 
-      setNumQubits: (n) => set(s => { s.numQubits = Math.max(1, Math.min(8, n)) }),
-      addQubit: () => set(s => { if (s.numQubits < 8) s.numQubits++ }),
-      removeQubit: () => set(s => {
-        if (s.numQubits > 1) {
-          s.numQubits--
-          s.gates = s.gates.filter((g: Gate) => g.qubit < s.numQubits)
-        }
-      }),
+      setNumQubits: (n) =>
+        set((s) => {
+          s.numQubits = Math.max(1, Math.min(8, n))
+        }),
 
-      placeGate: (gate) => set(s => {
-        // Remove any existing gate at same position
-        s.gates = s.gates.filter(g => !(g.qubit === gate.qubit && g.slot === gate.slot))
-        s.gates.push({ ...gate, id: newId() })
-      }),
+      addQubit: () =>
+        set((s) => {
+          if (s.numQubits < 8) s.numQubits++
+        }),
 
-      removeGate: (id) => set(s => {
-        s.gates = s.gates.filter(g => g.id !== id)
-      }),
+      removeQubit: () =>
+        set((s) => {
+          if (s.numQubits > 1) {
+            s.numQubits--
+            s.gates = s.gates.filter((g: Gate) => g.qubit < s.numQubits)
+          }
+        }),
 
-      clearCircuit: () => set(s => {
-        s.gates = []
-        s.simResult = null
-        s.simError = null
-        s.numQubits = 3
-      }),
+      placeGate: (gate) =>
+        set((s) => {
+          s.gates = s.gates.filter(
+            (g: Gate) => !(g.qubit === gate.qubit && g.slot === gate.slot)
+          )
+          s.gates.push({ ...gate, id: newId() })
+        }),
 
-      setSelectedGate: (id) => set(s => { s.selectedGate = id }),
-      setDraggingGate: (gate) => set(s => { s.draggingGate = gate }),
-      setCode: (code) => set(s => { s.code = code }),
-      setCodeEdited: (v) => set(s => { s.codeEdited = v }),
-      setSimResult: (result) => set(s => { s.simResult = result }),
-      setIsSimulating: (v) => set(s => { s.isSimulating = v }),
-      setSimError: (e) => set(s => { s.simError = e }),
+      removeGate: (id) =>
+        set((s) => {
+          s.gates = s.gates.filter((g: Gate) => g.id !== id)
+        }),
 
-      addLog: (message, type) => set(s => {
-        s.logs.push({ id: newId(), timestamp: timestamp(), message, type })
-        if (s.logs.length > 200) s.logs.shift()
-      }),
-      clearLogs: () => set(s => { s.logs = [] }),
+      clearCircuit: () =>
+        set((s) => {
+          s.gates = []
+          s.simResult = null
+          s.simError = null
+          s.numQubits = 3
+        }),
 
-      setAlgorithms: (algos) => set(s => { s.algorithms = algos }),
-      loadAlgorithm: (algo) => set(s => {
-        s.numQubits = algo.qubits
-        s.gates = algo.gates.map(g => ({ ...g, id: newId() }))
-        s.simResult = null
-        s.simError = null
-        s.showAlgoModal = false
-      }),
-      setShowAlgoModal: (v) => set(s => { s.showAlgoModal = v }),
-      setActivePanel: (panel) => set(s => { s.activePanel = panel }),
+      setSelectedGate: (id) =>
+        set((s) => {
+          s.selectedGate = id
+        }),
+
+      setDraggingGate: (gate) =>
+        set((s) => {
+          s.draggingGate = gate
+        }),
+
+      setCode: (code) =>
+        set((s) => {
+          s.code = code
+        }),
+
+      setCodeEdited: (v) =>
+        set((s) => {
+          s.codeEdited = v
+        }),
+
+      setSimResult: (result) =>
+        set((s) => {
+          s.simResult = result
+        }),
+
+      setIsSimulating: (v) =>
+        set((s) => {
+          s.isSimulating = v
+        }),
+
+      setSimError: (e) =>
+        set((s) => {
+          s.simError = e
+        }),
+
+      addLog: (message, type) =>
+        set((s) => {
+          s.logs.push({
+            id: newId(),
+            timestamp: timestamp(),
+            message,
+            type,
+          })
+          if (s.logs.length > 200) s.logs.shift()
+        }),
+
+      clearLogs: () =>
+        set((s) => {
+          s.logs = []
+        }),
+
+      setAlgorithms: (algos) =>
+        set((s) => {
+          s.algorithms = algos
+        }),
+
+      loadAlgorithm: (algo) =>
+        set((s) => {
+          s.numQubits = algo.qubits
+          s.gates = algo.gates.map((g: Omit<Gate, 'id'>) => ({
+            ...g,
+            id: newId(),
+          }))
+          s.simResult = null
+          s.simError = null
+          s.showAlgoModal = false
+        }),
+
+      setShowAlgoModal: (v) =>
+        set((s) => {
+          s.showAlgoModal = v
+        }),
+
+      setActivePanel: (panel) =>
+        set((s) => {
+          s.activePanel = panel
+        }),
     }))
   )
 )
