@@ -117,7 +117,7 @@ export const useQuantumStore = create<QuantumStore>()(
       removeQubit: () => set(s => {
         if (s.numQubits > 1) {
           s.numQubits--
-          s.gates = s.gates.filter(g => g.qubit < s.numQubits)
+          s.gates = s.gates.filter((g: Gate) => g.qubit < s.numQubits)
         }
       }),
 
